@@ -16,6 +16,8 @@ import { logger } from './utils/logger';
 import authRoutes from './routes/auth';
 import documentRoutes from './routes/documents';
 import quizRoutes from './routes/quizzes';
+import flashcardRoutes from './routes/flashcards';
+import summaryRoutes from './routes/summaries';
 import creditRoutes from './routes/credits';
 import paymentRoutes from './routes/payments';
 
@@ -88,6 +90,8 @@ app.get('/health', (_req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/quizzes', quizRoutes);
+app.use('/api/flashcards', flashcardRoutes);
+app.use('/api/summaries', summaryRoutes);
 app.use('/api/credits', creditRoutes);
 app.use('/api/payments', paymentRoutes);
 

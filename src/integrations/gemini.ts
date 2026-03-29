@@ -135,6 +135,140 @@ function distributeQuestions(
   return distribution;
 }
 
+// ─── Flashcards ──────────────────────────────────────────────────────────────
+
+export interface GeneratedFlashcard {
+  front: string;
+  back: string;
+}
+
+export async function generateFlashcards(
+  content: string,
+  cardCount: number
+): Promise<GeneratedFlashcard[]> {
+  const prompt = `You are an expert educator. Generate exactly ${cardCount} flashcards from the study material below.
+
+RULES:
+1. Each flashcard must be based EXCLUSIVELY on the provided content.
+2. Front: a concise question, term, or concept (max 15 words).
+3. Back: a clear, complete answer or definition (max 60 words).
+4. Cover the most important concepts, definitions, and key ideas.
+5. Avoid duplicates and trivial cards.
+6. Use the same language as the study material.
+
+RETURN FORMAT — Return ONLY valid JSON:
+{
+  "flashcards": [
+    { "front": "Question or term", "back": "Answer or definition" }
+  ]
+}
+
+STUDY MATERIAL:
+---
+${content}
+---
+
+Generate exactly ${cardCount} flashcards now:`;
+
+  try {
+    const m = getModel();
+    const result = await m.generateContent(prompt);
+    const text = result.response.text();
+
+    let parsed: { flashcards: GeneratedFlashcard[] };
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('Gemini returned invalid JSON for flashcards');
+      parsed = JSON.parse(jsonMatch[0]);
+    }
+
+    if (!Array.isArray(parsed.flashcards)) {
+      throw new Error('Gemini response missing flashcards array');
+    }
+
+    const valid = parsed.flashcards.filter(
+      (c) =>
+        typeof c.front === 'string' &&
+        c.front.trim().length > 0 &&
+        typeof c.back === 'string' &&
+        c.back.trim().length > 0
+    );
+
+    logger.info(`Gemini generated ${valid.length} flashcards`);
+    return valid;
+  } catch (error) {
+    logger.error('Gemini flashcard generation error:', error);
+    throw new Error(`AI generation failed: ${(error as Error).message}`);
+  }
+}
+
+// ─── Summary ─────────────────────────────────────────────────────────────────
+
+export interface GeneratedSummary {
+  overview: string;
+  sections: { heading: string; body: string }[];
+  keyTerms: { term: string; definition: string }[];
+}
+
+export async function generateSummary(content: string): Promise<GeneratedSummary> {
+  const prompt = `You are an expert educator. Create a structured summary of the study material below.
+
+RULES:
+1. Base the summary EXCLUSIVELY on the provided content.
+2. Overview: 2-4 sentences covering what the material is about.
+3. Sections: 3-8 sections, each with a clear heading and a concise body paragraph (3-6 sentences).
+4. Key terms: 5-15 important terms/concepts with their definitions (max 30 words each).
+5. Use the same language as the study material.
+6. Be concise but complete — prioritize what a student needs to know for an exam.
+
+RETURN FORMAT — Return ONLY valid JSON:
+{
+  "overview": "Short overview of the material.",
+  "sections": [
+    { "heading": "Section title", "body": "Section content paragraph." }
+  ],
+  "keyTerms": [
+    { "term": "Term name", "definition": "Clear definition." }
+  ]
+}
+
+STUDY MATERIAL:
+---
+${content}
+---
+
+Generate the structured summary now:`;
+
+  try {
+    const m = getModel();
+    const result = await m.generateContent(prompt);
+    const text = result.response.text();
+
+    let parsed: GeneratedSummary;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('Gemini returned invalid JSON for summary');
+      parsed = JSON.parse(jsonMatch[0]);
+    }
+
+    if (!parsed.overview || !Array.isArray(parsed.sections) || !Array.isArray(parsed.keyTerms)) {
+      throw new Error('Gemini response has invalid summary structure');
+    }
+
+    logger.info(`Gemini generated summary with ${parsed.sections.length} sections`);
+    return parsed;
+  } catch (error) {
+    logger.error('Gemini summary generation error:', error);
+    throw new Error(`AI generation failed: ${(error as Error).message}`);
+  }
+}
+
+// ─── Quiz ─────────────────────────────────────────────────────────────────────
+
 export async function generateQuizQuestions(
   input: QuizGenerationInput
 ): Promise<GeneratedQuestion[]> {

@@ -76,6 +76,9 @@ export function calculateQuizCost(
   };
 }
 
+export const FLASHCARD_COST = 10; // flat per set (~20 cards)
+export const SUMMARY_COST = 15;   // flat per summary
+
 // ========================
 // CREDIT OPERATIONS
 // ========================

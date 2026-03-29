@@ -31,3 +31,12 @@ export const quizLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+// Shared limiter for flashcard and summary generation
+export const aiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 5,
+  message: { success: false, error: 'Too many AI generation requests. Please wait a moment.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});

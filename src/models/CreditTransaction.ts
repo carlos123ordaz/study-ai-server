@@ -6,6 +6,10 @@ export type TransactionType =
   | 'quiz_generation'
   | 'quiz_generation_refund'
   | 'document_processing_refund'
+  | 'flashcard_generation'
+  | 'flashcard_generation_refund'
+  | 'summary_generation'
+  | 'summary_generation_refund'
   | 'payment_recharge'
   | 'admin_adjustment';
 
@@ -42,6 +46,10 @@ const creditTransactionSchema = new Schema<ICreditTransaction>(
         'quiz_generation',
         'quiz_generation_refund',
         'document_processing_refund',
+        'flashcard_generation',
+        'flashcard_generation_refund',
+        'summary_generation',
+        'summary_generation_refund',
         'payment_recharge',
         'admin_adjustment',
       ],
