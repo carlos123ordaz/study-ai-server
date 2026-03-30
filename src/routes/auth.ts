@@ -21,7 +21,7 @@ router.get(
 );
 
 router.get('/google/failure', (_req, res) => {
-  const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+  const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
   res.redirect(`${clientUrl}/login?error=google_auth_failed`);
 });
 

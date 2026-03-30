@@ -18,7 +18,7 @@ function optional(key: string, defaultValue: string): string {
 export const env = {
   nodeEnv: optional('NODE_ENV', 'development'),
   port: parseInt(optional('PORT', '4000'), 10),
-  clientUrl: optional('CLIENT_URL', 'http://localhost:5173'),
+  clientUrl: optional('CLIENT_URL', 'http://localhost:3000'),
 
   mongodbUri: optional('MONGODB_URI', 'mongodb://localhost:27017/studyai'),
 
