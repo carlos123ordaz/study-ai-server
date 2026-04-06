@@ -87,8 +87,8 @@ export const Payment: Model<IPayment> = mongoose.model<IPayment>('Payment', paym
 
 // Available credit packages
 export const CREDIT_PACKAGES: ICreditPackage[] = [
-  { credits: 100, priceUsd: 2.99, label: 'Starter' },
-  { credits: 300, priceUsd: 7.99, label: 'Popular' },
-  { credits: 700, priceUsd: 14.99, label: 'Pro' },
-  { credits: 1500, priceUsd: 24.99, label: 'Power' },
+  { credits: 1000, priceUsd: 2.99, label: 'Starter' },
+  { credits: 3000, priceUsd: 7.99, label: 'Popular' },
+  { credits: 7000, priceUsd: 14.99, label: 'Pro' },
+  { credits: 15000, priceUsd: 24.99, label: 'Power' },
 ];

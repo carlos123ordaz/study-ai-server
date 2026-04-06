@@ -1,7 +1,7 @@
 import rateLimit from 'express-rate-limit';
 
 export const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 100000, // 15 minutes
   max: 200,
   message: { success: false, error: 'Too many requests, please try again later.' },
   standardHeaders: true,
@@ -9,7 +9,7 @@ export const generalLimiter = rateLimit({
 });
 
 export const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 15 * 60 * 100000,
   max: 20,
   message: { success: false, error: 'Too many authentication attempts.' },
   standardHeaders: true,
@@ -17,7 +17,7 @@ export const authLimiter = rateLimit({
 });
 
 export const uploadLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
+  windowMs: 60 * 60 * 100000, // 1 hour
   max: 20,
   message: { success: false, error: 'Upload limit reached. Try again in an hour.' },
   standardHeaders: true,
@@ -25,7 +25,7 @@ export const uploadLimiter = rateLimit({
 });
 
 export const quizLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
+  windowMs: 60 * 100000, // 1 minute
   max: 5,
   message: { success: false, error: 'Too many quiz generation requests.' },
   standardHeaders: true,
